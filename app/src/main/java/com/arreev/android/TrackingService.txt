@@ -1,0 +1,119 @@
+
+package com.arreev.android
+
+import javax.inject.*
+
+import android.os.*
+import android.app.*
+import android.content.*
+import com.google.android.gms.location.*
+
+import gubo.slipwire.*
+
+/**
+ * Created by jeffschulz on 5/16/18.
+ *
+ * https://developer.android.com/guide/components/services
+ * https://developer.android.com/guide/components/services#Foreground
+ * https://developer.android.com/about/versions/oreo/background-location-limits
+ */
+class TrackingService : Service()
+{
+    @Inject lateinit var state : State
+
+    private val CHANNELID                   = "ARREEV_LOCATION_UPATES_CHANNEL"
+    private val ONGOING_NOTIFICATION_ID     = 100
+
+    private val callback = object : LocationCallback() {
+        override fun onLocationResult( result:LocationResult? ) {
+            dbg("OLR: ${result}" )
+            state.setTrackingLocation( result?.lastLocation ?: null )
+        }
+        override fun onLocationAvailability( availability:LocationAvailability? ) {
+            dbg("OLA: ${availability}" )
+        }
+    }
+
+    private var client: FusedLocationProviderClient? = null
+    private var transporterid: String? = null
+
+    override fun onCreate() {
+        dbg("TrackingService.onCreate " )
+
+        ArreevApplication.appComponent.inject(this )
+
+        client = LocationServices.getFusedLocationProviderClient(this )
+
+        /*
+         * https://developer.android.com/training/notify-user/channels
+         */
+
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+            val channel = NotificationChannel( CHANNELID,"Arreev Location",NotificationManager.IMPORTANCE_DEFAULT )
+            channel.description = "Arreev Ride Location Updates"
+            val notificationManager = getSystemService( NotificationManager::class.java )
+            notificationManager!!.createNotificationChannel( channel )
+        }
+
+        val notificationIntent = Intent(this,LaunchActivity::class.java )
+        val pendingIntent = PendingIntent.getActivity(this,0, notificationIntent,0 )
+
+        val notification = android.support.v4.app.NotificationCompat.Builder(this,CHANNELID )
+                .setPriority( android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT )
+                .setContentText( getText( R.string.notificationmessage ) )
+                .setContentTitle( getText (R.string.notificationtitle ) )
+                .setTicker( getText( R.string.notificationticker ) )
+                .setSmallIcon( R.drawable.ic_notification )
+                .setContentIntent( pendingIntent )
+                .build()
+
+        startForeground( ONGOING_NOTIFICATION_ID,notification )
+    }
+
+    override fun onStartCommand( intent:Intent,flags:Int,startId:Int ):Int {
+        transporterid = intent.getStringExtra("transporterid" )
+        dbg("TrackingService.onStartCommand ${transporterid}" )
+
+        /*
+         * https://developer.android.com/training/location/change-location-settings
+         * https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest.html#field-summary
+         */
+        val request = LocationRequest().apply {
+            interval = 2500
+            fastestInterval = 1000
+            maxWaitTime = 5000
+            smallestDisplacement = 1F
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest( request )
+        val settings = LocationServices.getSettingsClient(this )
+        settings.checkLocationSettings( builder.build() )
+                .addOnSuccessListener { response -> dbg("Location Request Validated" ) }
+                .addOnFailureListener { exception -> dbg( exception ) }
+
+        try {
+            client?.removeLocationUpdates( callback )
+            client?.requestLocationUpdates( request,callback,null )
+            state.setTracking( transporterid )
+        } catch ( x:SecurityException ) {
+            dbg( x )
+        }
+
+        return Service.START_NOT_STICKY
+    }
+
+    override fun onBind( intent:Intent ):IBinder? { return null }
+    override fun onUnbind( intent:Intent ):Boolean { return false }
+    override fun onRebind( intent:Intent ) {}
+
+    override fun onDestroy() {
+        stopForeground(true )
+
+        client?.removeLocationUpdates( callback )
+        client = null
+
+        state.setTracking( null )
+
+        dbg("TrackingService.onDestroy" )
+    }
+}

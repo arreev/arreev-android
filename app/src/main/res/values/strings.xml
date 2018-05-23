@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">arreev</string>
+
+    <string name="home">home</string>
+    <string name="chat">chat</string>
+    <string name="notifications">notifications</string>
+    <string name="profile">profile</string>
+    <string name="share">share</string>
+    <string name="settings">options</string>
+    <string name="search">search for community</string>
+    <string name="console">console</string>
+    <string name="signout">sign-out</string>
+
+    <string name="rides">rides</string>
+    <string name="routes">routes</string>
+    <string name="followers">followers</string>
+
+    <string name="notificationtitle">arreev</string>
+    <string name="notificationmessage">sending location updates...</string>
+    <string name="notificationticker">arreev location updates</string>
+
+    <string name="networkerror">network error ... please check connection.</string>
+
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
 </resources>

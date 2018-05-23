@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:background="@drawable/homesidenavbar"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:gravity="bottom" android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <View
+        android:layout_marginTop="24dp"
+        android:background="@color/colorDarkGray"
+        android:layout_width="match_parent" android:layout_height="1dp">
+    </View>
+
+    <ImageView
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_margin="10dp"
+        android:layout_width="48dp" android:layout_height="48dp">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/navheaderemailtextview"
+        android:text="email goes here"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="8pt" android:textStyle="bold"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+    </TextView>
+
+</LinearLayout>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"></import>
+        <variable name="ride" type="com.arreev.android.Ride"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        card_view:cardCornerRadius="8dp"
+        card_view:cardUseCompatPadding="false"
+        card_view:contentPadding="8dp"
+
+        android:elevation="10dp"
+        android:translationZ="10dp"
+
+        android:layout_margin="15dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            card_view:cardCornerRadius="8dp"
+            card_view:cardUseCompatPadding="false"
+
+            android:elevation="0dp"
+            android:translationZ="0dp"
+
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.arreev.android.view.RectangularImageView
+                android:id="@+id/rideimageview"
+                android:clickable="true"
+                android:scaleType="centerCrop" android:background="#06000000"
+                android:layout_weight="1" android:layout_width="match_parent" android:layout_height="0dp">
+            </com.arreev.android.view.RectangularImageView>
+
+        </android.support.v7.widget.CardView>
+
+        <RelativeLayout
+            android:translationZ="5dp"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+            <ImageView
+                android:src="@drawable/ic_gps_off"
+                android:padding="6dp"
+                android:visibility="@{ride.isTrackingEnabled ? View.INVISIBLE : View.VISIBLE}"
+                android:background="@drawable/ridegpsbackground"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            </ImageView>
+            <ImageView
+                android:src="@drawable/ic_gps_on"
+                android:padding="6dp"
+                android:visibility="@{ride.isTrackingEnabled ? View.VISIBLE : View.INVISIBLE}"
+                android:background="@drawable/ridegpsbackground"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            </ImageView>
+            <ImageView
+                android:src="@drawable/ic_share"
+                android:padding="6dp"
+                android:background="@drawable/ridesharebackground"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            </ImageView>
+            <Button
+                android:id="@+id/rideturntrackingon"
+                android:text="TURN TRACKING ON"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:visibility="@{ride.isTrackingEnabled ? View.INVISIBLE : View.VISIBLE}"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            </Button>
+            <Button
+                android:id="@+id/rideturntrackingoff"
+                android:text="TURN TRACKING OFF"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:visibility="@{ride.isTrackingEnabled ? View.VISIBLE : View.INVISIBLE}"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            </Button>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</layout>

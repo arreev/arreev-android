@@ -1,61 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
-        <variable name="binding" type="com.arreev.android.TransporterBinder"/>
+        <variable name="transporter" type="com.arreev.android.Transporter"/>
     </data>
 
     <android.support.v7.widget.CardView
-        card_view:cardCornerRadius="5dp"
-        card_view:cardUseCompatPadding="true"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardUseCompatPadding="false"
+        card_view:contentPadding="8dp"
 
-        android:id="@+id/transportercardview"
-        android:translationZ="5dp"
-        android:layout_margin="10dp"
+        android:elevation="10dp"
+        android:translationZ="10dp"
+
+        android:layout_margin="15dp"
         android:layout_width="match_parent" android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="vertical" android:padding="8dp"
+        <android.support.v7.widget.CardView
+            card_view:cardCornerRadius="8dp"
+            card_view:cardUseCompatPadding="false"
+
+            android:elevation="0dp"
+            android:translationZ="0dp"
+
             android:layout_width="match_parent" android:layout_height="wrap_content">
+            <com.arreev.android.view.RectangularImageView
+                android:id="@+id/transporterimageview"
+                android:clickable="true"
+                android:scaleType="centerCrop" android:background="#06000000"
+                android:layout_weight="1" android:layout_width="match_parent" android:layout_height="0dp">
+            </com.arreev.android.view.RectangularImageView>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <com.arreev.android.ui.StaggeredImageView
-                    android:id="@+id/transporterimageview"
-                    android:scaleType="centerCrop" android:background="#06000000"
-                    android:layout_weight="1" android:layout_width="match_parent" android:layout_height="0dp">
-                </com.arreev.android.ui.StaggeredImageView>
-                <RelativeLayout
-                    android:layout_width="match_parent" android:layout_height="match_parent">
-                    <ImageView
-                        android:id="@+id/transportingimageview"
-                        android:src="@drawable/lednul"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_width="16dp" android:layout_height="16dp">
-                    </ImageView>
-                </RelativeLayout>
-            </FrameLayout>
+        </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:orientation="horizontal" android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
-                android:layout_width="match_parent" android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/transporternameview"
-                    android:text="NAME GOES HERE"
-                    style="@style/LabelText" android:maxLines="1"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-        </LinearLayout>
     </android.support.v7.widget.CardView>
 
 </layout>
-

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/nav_primary_group" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_signout"
+            android:icon="@drawable/ic_lock"
+            android:title="@string/signout">
+        </item>
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_profile"
+            android:title="@string/profile">
+        </item>
+        <item
+            android:id="@+id/nav_capture"
+            android:icon="@drawable/ic_camera"
+            android:title="capture">
+        </item>
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share"
+            android:title="@string/share">
+        </item>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings">
+        </item>
+    </group>
+
+    <group android:id="@+id/nav_secondary_group" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_privacy"
+            android:icon="@drawable/ic_announcement"
+            android:title="privacy policy">
+        </item>
+        <item
+            android:id="@+id/nav_terms"
+            android:icon="@drawable/ic_announcement"
+            android:title="terms of service">
+        </item>
+    </group>
+</menu>
