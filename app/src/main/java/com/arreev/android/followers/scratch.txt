@@ -13,7 +13,6 @@ import gubo.slipwire.*
 import com.arreev.android.*
 import com.arreev.android.api.*
 
-
 /**
  * Created by jeffschulz on 5/15/18.
  *
@@ -22,6 +21,7 @@ import com.arreev.android.api.*
  */
 class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDisplay.Listener
 {
+    private val referencelisteners = mutableListOf<PersonChildEventListener>()
     private val persons = mutableListOf<Person>()
 
     private var database: FirebaseDatabase? = null
@@ -31,6 +31,22 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
     @Inject lateinit var eventbus : EventBus
     @Inject lateinit var state : State
+
+    inner class PersonChildEventListener( val person:Person,val reference:DatabaseReference ) : ChildEventListener
+    {
+        override fun onChildMoved( snapshot:DataSnapshot?,prevchildkey:String? ) {}
+        override fun onChildChanged( snapshot:DataSnapshot?,prevchildkey:String? ) {
+//            when ( snapshot?.key ) {
+//                "isFollowing" -> {
+//                    val isFollowing = snapshot.value as Boolean
+//                    person.isFollowing?.set( isFollowing )
+//                }
+//            }
+        }
+        override fun onChildAdded( snapshot:DataSnapshot?,prevchildkey:String? ) {}
+        override fun onChildRemoved( snapshot:DataSnapshot? ) {}
+        override fun onCancelled( error:DatabaseError? ) {}
+    }
 
     init { _init() }
 
@@ -64,8 +80,7 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
         display?.setItemCount( persons.size )
         display?.setPosition( firstVisiblePosition )
 
-        if ( persons.isEmpty() ) fetch(0,500 )
-        getTransporterInfo()
+        if ( persons.isEmpty() ) fetch(0,500 ) else resync()
     }
 
     private fun _unbind() {
@@ -74,8 +89,6 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
         display?.listener = null
         display?.release()
         display = null
-
-        persons.clear()
     }
 
     private fun _release() {
@@ -86,6 +99,7 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
         display = null
 
         persons.clear()
+        clearReferenceListeners()
 
         dbg("PersonsPresenter.release" )
     }
@@ -112,18 +126,10 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
         val path = "followers/${ownerid}/${person.id}/${transporterid}"
         val reference = database?.getReference( path )
+        reference ?: return
 
-        reference?.addValueEventListener( object : ValueEventListener {
-            override fun onDataChange( snapshot:DataSnapshot ) {
-                reference?.removeEventListener(this )
-                val on = !( snapshot.getValue( Boolean::class.java ) ?: false )
-                reference.setValue( on ).addOnSuccessListener { person.isFollowing.set( on ) }
-            }
-            override fun onCancelled( error:DatabaseError ) {
-                reference?.removeEventListener(this )
-                dbg( error )
-            }
-        } )
+//        val isFollowing = !( person.isFollowing?.get() ?: false )
+//        reference.updateChildren( mapOf("isFollowing" to isFollowing ) )
     }
 
     private fun fetch( start:Int,count:Int ) {
@@ -132,7 +138,7 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
         disposable?.dispose()
 
-        FetchPersons().fetch(ownerid ?: "", start,count )
+        FetchPersons().fetch( ownerid ?: "", start,count )
                 .flatMap { (id,name,imageURL) -> Observable.just( Person( id,name,imageURL ) ) }
                 .subscribe(
                 { f:Person -> onNext( f ) },
@@ -149,9 +155,68 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
         }
     }
 
+    private fun onError() {
+        eventbus.send( NetworkErrorEvent() )
+    }
+
     private fun onComplete() {
         display?.setItemCount( persons.size )
-        sync()
+        resync()
+    }
+
+    private fun resync() {
+        clearReferenceListeners()
+        for ( p in persons ) sync( p )
+    }
+
+    private fun sync( person:Person ) {
+        val ownerid = FirebaseAuth.getInstance().currentUser?.uid
+        ownerid ?: return
+
+        val transporterid = this.state.getTransporter();
+        transporterid ?: return
+
+        val path = "followers/${ownerid}/${person.id}/${transporterid}"
+        val reference = database?.getReference( path )
+        reference ?: return
+
+        /*
+         * get current value
+         */
+        val valuelistener = object : ValueEventListener {
+            override fun onDataChange( snapshot:DataSnapshot ) {
+                value( snapshot )
+                reference.removeEventListener(this )
+            }
+            override fun onCancelled( error:DatabaseError ) { dbg( error ) }
+        }
+        reference.addValueEventListener( valuelistener )
+
+        /*
+         * add child change listener
+         */
+        val childlistener = PersonChildEventListener( person,reference )
+        referencelisteners.add( childlistener )
+        reference.addChildEventListener( childlistener )
+    }
+
+    private fun value( snapshot:DataSnapshot? ) {
+        snapshot ?: return
+        try {
+            val personid = snapshot.key
+//            val isFollowing = snapshot.child("isFollowing" ).getValue( Boolean::class.java )
+//            val person = persons.find { p -> p.id == personid }
+//            person?.isFollowing?.set( isFollowing ?: false )
+        } catch ( x:Throwable ) {
+            dbg( x )
+        }
+    }
+
+    private fun clearReferenceListeners() {
+        for ( listener in referencelisteners ) {
+            listener?.reference?.removeEventListener( listener )
+        }
+        referencelisteners.clear()
     }
 
     private fun getTransporterInfo() {
@@ -165,41 +230,7 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
         FetchTransporter().fetch( ownerid,transporterid ).subscribe(
                 { t:Transporter -> display?.assumeTransporter( t ) },
-                { e:Throwable -> onError() },
-                { sync() }
+                { e:Throwable -> onError() }
         )
-    }
-
-    private fun sync() {
-        val ownerid = FirebaseAuth.getInstance().currentUser?.uid
-        ownerid ?: return
-
-        val transporterid = this.state.getTransporter();
-        transporterid ?: return
-
-        persons.forEach { person -> sync( ownerid,transporterid,person ) }
-    }
-
-    private fun sync( ownerid:String,transporterid:String,person:Person ) {
-        person.isFollowing.set( false )
-
-        val path = "followers/${ownerid}/${person.id}/${transporterid}"
-        val reference = database?.getReference( path )
-
-        reference?.addValueEventListener( object : ValueEventListener {
-            override fun onDataChange( snapshot:DataSnapshot ) {
-                reference?.removeEventListener(this )
-                val on = ( snapshot.getValue( Boolean::class.java ) ?: false )
-                person.isFollowing.set( on )
-            }
-            override fun onCancelled( error:DatabaseError ) {
-                reference?.removeEventListener(this )
-                dbg( error )
-            }
-        } )
-    }
-
-    private fun onError() {
-        eventbus.send( NetworkErrorEvent() )
     }
 }

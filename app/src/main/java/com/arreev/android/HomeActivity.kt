@@ -182,7 +182,11 @@ class HomeActivity : android.support.v7.app.AppCompatActivity(),
     private fun startTrackingService( ride:Ride ) {
         stopService( trackingservice )
 
-        trackingservice?.putExtra("transporterid",ride.id )
+        val ownerid = FirebaseAuth.getInstance().currentUser?.uid
+        val transporterid = ride.id
+
+        trackingservice?.putExtra("ownerid",ownerid )
+        trackingservice?.putExtra("transporterid",transporterid )
 
         val permission = android.support.v4.content.ContextCompat.checkSelfPermission( applicationContext,android.Manifest.permission.ACCESS_FINE_LOCATION )
         when ( permission ) {

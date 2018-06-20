@@ -16,4 +16,6 @@ interface PersonsDisplay : Display,DataSink<Person>
 
     var listener: PersonsDisplay.Listener?
     var firstVisiblePosition: Int
+
+    fun assumeTransporter( transporter:Transporter? )
 }

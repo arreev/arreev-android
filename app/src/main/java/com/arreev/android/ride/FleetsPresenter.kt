@@ -112,7 +112,7 @@ class FleetsPresenter : Presenter<FleetsDisplay>,DataSource<Fleet>,FleetsDisplay
         val ownerid = FirebaseAuth.getInstance().currentUser?.uid
         ownerid ?: return
 
-        FetchFleets().fetch( ownerid ?: "", start,count ).subscribe(
+        FetchFleets().fetch(ownerid ?: "", start,count ).subscribe(
                 { f:Fleet -> onNext( f ) },
                 { x:Throwable -> onError() },
                 { onComplete() }

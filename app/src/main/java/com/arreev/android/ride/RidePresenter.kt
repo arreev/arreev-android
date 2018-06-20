@@ -143,7 +143,7 @@ class RidePresenter : Presenter<RideDisplay>,DataSource<Ride>,RideDisplay.Listen
         val transporterid = state.getTransporter()
         if ( transporterid == null ) { return }
 
-        disposable = FetchTransporter().fetch( ownerid ?: "",transporterid ?: "", start,count )
+        disposable = FetchTransporter().fetch( ownerid ?: "",transporterid ?: "" )
                 .flatMap { (id,name,imageURL) -> Observable.just( Ride( id,name,imageURL ) ) }
                 .subscribe(
                 { r:Ride -> onNext( r ) },

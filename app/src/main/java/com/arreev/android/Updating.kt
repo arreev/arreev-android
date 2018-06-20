@@ -24,10 +24,11 @@ class Updating
         ArreevApplication.appComponent.inject(this )
     }
 
-    fun open( transporterid:String ) {
-        dbg("Updating.open $transporterid" )
+    fun open( ownerid:String,transporterid:String ) {
+        dbg("Updating.open $ownerid $transporterid" )
 
-        transporterreference = FirebaseDatabase.getInstance().getReference( transporterid )
+        val path = "trackers/${ownerid}/${transporterid}"
+        transporterreference = FirebaseDatabase.getInstance().getReference( path )
 
         disposable = state.observeClient().observeOn( Schedulers.trampoline() ).subscribe( { client:Client -> onStateChange( client ) } )
     }

@@ -37,7 +37,7 @@ class FetchTransporter
         ) :Observable<Response>
     }
 
-    fun fetch( ownerid:String,id:String, start:Int,count:Int ) : Observable<Transporter> {
+    fun fetch( ownerid:String,id:String ) : Observable<Transporter> {
         return retrofit.newBuilder().baseUrl("https://api.arreev.com" )
                 .build()
                 .create( get::class.java )

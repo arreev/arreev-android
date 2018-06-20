@@ -23,8 +23,8 @@ class Tracking : LocationCallback()
         ArreevApplication.appComponent.inject(this )
     }
 
-    fun open( transporterid:String? ) {
-        dbg("Tracking.open $transporterid" )
+    fun open( ownerid:String,transporterid:String? ) {
+        dbg("Tracking.open $ownerid $transporterid" )
 
         client = LocationServices.getFusedLocationProviderClient( context )
 
@@ -38,7 +38,7 @@ class Tracking : LocationCallback()
         val settings = LocationServices.getSettingsClient( context )
         settings.checkLocationSettings( builder.build() )
                 .addOnSuccessListener { response -> validate( response ) }
-                .addOnFailureListener { exception -> dbg( exception ) }
+                .addOnFailureListener { exception -> dbg( exception as Any ) }
 
         try {
             client?.removeLocationUpdates(this )
@@ -53,7 +53,6 @@ class Tracking : LocationCallback()
     }
 
     override fun onLocationResult( result:LocationResult? ) {
-        // dbg( result )
         state.setTrackingLocation( result?.lastLocation ?: null )
     }
 

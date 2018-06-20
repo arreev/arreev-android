@@ -42,6 +42,8 @@ class PersonsAdapter(val view:View, val dataSource:DataSource<Person>) : Persons
     override fun setItemCount( count:Int ) { _setItemCount( count ) }
     override fun setPosition( position:Int ) { _setPosition( position ) }
 
+    override fun assumeTransporter( transporter:Transporter? ) { _assumeTransporter( transporter ) }
+
     /**********************************************************************************************/
 
     private fun _init() {
@@ -68,6 +70,20 @@ class PersonsAdapter(val view:View, val dataSource:DataSource<Person>) : Persons
 
     private fun _setPosition( position:Int ) {
         recyclerView?.scrollToPosition( position )
+    }
+
+    private fun _assumeTransporter( transporter:Transporter? ) {
+        val followersfragmenttransporterimageview = view.findViewById<android.widget.ImageView>( R.id.followersfragmenttransporterimageview )
+        followersfragmenttransporterimageview.setImageBitmap( null )
+
+        transporter ?: return
+
+        if ( transporter.imageURL != null ) {
+            val uri = android.net.Uri.parse( transporter.imageURL )
+            com.squareup.picasso.Picasso.get()
+                    .load( uri )
+                    .into( followersfragmenttransporterimageview )
+        }
     }
 
     private fun setupScrolling() {

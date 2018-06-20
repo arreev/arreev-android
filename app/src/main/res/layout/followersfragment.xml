@@ -11,16 +11,29 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent" android:layout_height="match_parent">
-        <TextView
-            android:text="allow people to follow you"
-            android:background="#88FFFFFF"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textSize="9pt" android:textStyle="bold"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-        </TextView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="allow people to follow"
+                android:background="#88FFFFFF"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:textSize="9pt" android:textStyle="bold"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+            </TextView>
+            <FrameLayout
+                android:background="@drawable/box"
+                android:layout_margin="6dp" android:padding="2dp"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/followersfragmenttransporterimageview"
+                    android:scaleType="centerCrop" android:layout_width="64dp" android:layout_height="64dp">
+                </ImageView>
+            </FrameLayout>
+        </RelativeLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/personsrecyclerview"
             android:layout_width="match_parent" android:layout_height="match_parent">

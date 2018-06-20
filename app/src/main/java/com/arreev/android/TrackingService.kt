@@ -58,9 +58,10 @@ class TrackingService : Service()
     override fun onStartCommand( intent:Intent,flags:Int,startId:Int ):Int {
         dbg("TrackingService.onStartCommand" )
 
+        val ownerid = intent.getStringExtra("ownerid" )
         val transporterid = intent.getStringExtra("transporterid" )
-        tracking.open( transporterid )
-        updating.open( transporterid )
+        tracking.open( ownerid,transporterid )
+        updating.open( ownerid,transporterid )
 
         return Service.START_NOT_STICKY
     }
