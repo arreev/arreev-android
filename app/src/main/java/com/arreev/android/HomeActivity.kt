@@ -12,6 +12,7 @@ import android.content.pm.*
 import com.google.firebase.auth.*
 
 import gubo.slipwire.*
+import kotlinx.android.synthetic.*
 
 /**
  * Created by jeffschulz on 5/4/18.
@@ -41,6 +42,10 @@ class HomeActivity : android.support.v7.app.AppCompatActivity(),
         super.onCreate( savedInstanceState )
         dbg("HomeActivity.onCreate" )
 
+        ArreevApplication.appComponent.inject(this )
+
+        sendFCMTokenToServer() // associates this fcm token with currentuser, which is non-null if arrive here
+
         /*
          * should never happen
          */
@@ -50,8 +55,6 @@ class HomeActivity : android.support.v7.app.AppCompatActivity(),
             finish()
             return
         }
-
-        ArreevApplication.appComponent.inject(this )
 
         trackingservice = Intent(this,TrackingService::class.java )
 
@@ -176,6 +179,9 @@ class HomeActivity : android.support.v7.app.AppCompatActivity(),
                         { homecontentgpsimageview.alpha = 0F }
                 );
             }
+            FENCING -> {
+                showDebugMessage( client.fencing )
+            }
         }
     }
 
@@ -204,6 +210,17 @@ class HomeActivity : android.support.v7.app.AppCompatActivity(),
         findViewById<View>( R.id.homecontentgpsimageview ).alpha = 0F
 
         stopService( trackingservice )
+    }
+
+    private fun showDebugMessage( message:String? ) {
+        val textview = findViewById<android.widget.TextView>( R.id.homecontentdebugtextview )
+
+        textview.visibility = android.view.View.VISIBLE
+        textview.alpha = 0F
+        textview.text = message
+        textview.animate().alpha(1F ).setDuration( 500 ).withEndAction {
+            textview.animate().alpha( 0F ).setDuration( 500 ).setStartDelay( 2500 ).withEndAction { textview.visibility = android.view.View.GONE }
+        }
     }
 
     private fun showNetworkError() {
@@ -271,8 +288,8 @@ class HomeActivity : android.support.v7.app.AppCompatActivity(),
         override fun getItem( position : Int ) : android.support.v4.app.Fragment? {
             var fragment: android.support.v4.app.Fragment? = null
             when ( position ) {
-                0 -> fragment = com.arreev.android.ride.RideFragment()
-                1 -> fragment = EmptyFragment()
+                0 -> fragment = com.arreev.android.rides.RidesFragment()
+                1 -> fragment = com.arreev.android.routes.RoutesFragment()
                 2 -> fragment = com.arreev.android.followers.FollowersFragment()
             }
             return fragment

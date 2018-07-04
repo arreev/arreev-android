@@ -17,6 +17,7 @@ class PersonsAdapter(val view:View, val dataSource:DataSource<Person>) : Persons
     private var _listener: PersonsDisplay.Listener? = null
     private var _pageDelta = 25
     private var _pageSize = 100
+    private var _busy = false
 
     private val personAdapter = PersonAdapter()
 
@@ -37,6 +38,10 @@ class PersonsAdapter(val view:View, val dataSource:DataSource<Person>) : Persons
     override var firstVisiblePosition:Int
         get() = linearLayoutManager?.findFirstVisibleItemPosition() ?: 0
         set(value) {}
+
+    override var busy:Boolean
+        get() = _busy
+        set( value ) { _busy = value; _setBusy( _busy ) }
 
     override fun release() { _release() }
     override fun setItemCount( count:Int ) { _setItemCount( count ) }
@@ -70,6 +75,10 @@ class PersonsAdapter(val view:View, val dataSource:DataSource<Person>) : Persons
 
     private fun _setPosition( position:Int ) {
         recyclerView?.scrollToPosition( position )
+    }
+
+    private fun _setBusy( b:Boolean ) {
+        view?.findViewById<View>( R.id.followersworkingimageview ).visibility = if ( b ) View.VISIBLE else View.INVISIBLE
     }
 
     private fun _assumeTransporter( transporter:Transporter? ) {

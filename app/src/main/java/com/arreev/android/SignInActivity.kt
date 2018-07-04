@@ -43,6 +43,11 @@ class SignInActivity : AppCompatActivity(),OnCompleteListener<AuthResult>
         signin.email.set( "guest@arreev.com" )
     }
 
+    override fun onResume() {
+        super.onResume()
+        sendFCMTokenToServer() // associates this fcm token with currentuser, which could be null if signed-out
+    }
+
     @Suppress( "UNUSED_PARAMETER" )
     public fun onSignIn( view:View ) {
         val imm = getSystemService( Context.INPUT_METHOD_SERVICE ) as android.view.inputmethod.InputMethodManager

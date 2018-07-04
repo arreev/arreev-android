@@ -20,6 +20,7 @@ class TrackingService : Service()
 {
     @Inject lateinit var tracking: Tracking
     @Inject lateinit var updating: Updating
+    @Inject lateinit var fencing: Fencing
 
     private val CHANNELID                   = "ARREEV_LOCATION_UPATES_CHANNEL"
     private val ONGOING_NOTIFICATION_ID     = 100
@@ -32,17 +33,14 @@ class TrackingService : Service()
         /*
          * https://developer.android.com/training/notify-user/channels
          */
-
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
             val channel = NotificationChannel( CHANNELID,"Arreev Location",NotificationManager.IMPORTANCE_DEFAULT )
             channel.description = "Arreev Ride Location Updates"
             val notificationManager = getSystemService( NotificationManager::class.java )
             notificationManager!!.createNotificationChannel( channel )
         }
-
         val notificationIntent = Intent(this,HomeActivity::class.java )
         val pendingIntent = PendingIntent.getActivity(this,0, notificationIntent,0 )
-
         val notification = android.support.v4.app.NotificationCompat.Builder(this,CHANNELID )
                 .setPriority( android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT )
                 .setContentText( getText( R.string.notificationmessage ) )
@@ -51,7 +49,6 @@ class TrackingService : Service()
                 .setSmallIcon( R.drawable.ic_notification )
                 .setContentIntent( pendingIntent )
                 .build()
-
         startForeground( ONGOING_NOTIFICATION_ID,notification )
     }
 
@@ -62,6 +59,7 @@ class TrackingService : Service()
         val transporterid = intent.getStringExtra("transporterid" )
         tracking.open( ownerid,transporterid )
         updating.open( ownerid,transporterid )
+        fencing.open( ownerid,transporterid );
 
         return Service.START_NOT_STICKY
     }
@@ -71,6 +69,7 @@ class TrackingService : Service()
     override fun onRebind( intent:Intent ) {}
 
     override fun onDestroy() {
+        fencing.close();
         updating.close()
         tracking.close()
 

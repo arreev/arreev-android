@@ -8,7 +8,8 @@ import dagger.*
 
 import gubo.slipwire.*
 import com.arreev.android.api.*
-import com.arreev.android.ride.*
+import com.arreev.android.rides.*
+import com.arreev.android.routes.*
 import com.arreev.android.followers.*
 
 @Module
@@ -48,6 +49,14 @@ class AppModule( val application:ArreevApplication )
 
     @Provides
     @Singleton
+    fun provideRoutesPresenter() : RoutesPresenter = RoutesPresenter()
+
+    @Provides
+    @Singleton
+    fun provideWaypointsPresenter() : WaypointsPresenter = WaypointsPresenter()
+
+    @Provides
+    @Singleton
     fun providePersonsPresenter() : PersonsPresenter = PersonsPresenter()
 
     @Provides
@@ -57,6 +66,10 @@ class AppModule( val application:ArreevApplication )
     @Provides
     @Singleton
     fun provideUpdateing(): Updating = Updating()
+
+    @Provides
+    @Singleton
+    fun provideFencing(): Fencing = Fencing()
 }
 
 /**
@@ -67,19 +80,27 @@ class AppModule( val application:ArreevApplication )
 interface AppComponent
 {
     fun inject( homeActivity:HomeActivity )
-    fun inject( rideFragment:RideFragment )
+    fun inject( rideFragment:RidesFragment)
     fun inject( ridePresenter:RidePresenter )
     fun inject( fleetsPresenter:FleetsPresenter )
     fun inject( transportersPresenter:TransportersPresenter )
     fun inject( fetchFleets:FetchFleets )
     fun inject( fetchTransporters:FetchTransporters )
     fun inject( fetchTransporter:FetchTransporter )
+    fun inject( routesFragment:RoutesFragment )
+    fun inject( routesPresenter:RoutesPresenter )
+    fun inject( fetchRoute:FetchRoute )
+    fun inject( fetchRoutes:FetchRoutes )
+    fun inject( waypointsPresenter:WaypointsPresenter )
+    fun inject( fetchWaypoints:FetchWaypoints )
     fun inject( followersFragment:FollowersFragment )
     fun inject( personsPresenter:PersonsPresenter )
     fun inject( network:Network )
     fun inject( tracking:Tracking )
     fun inject( updating:Updating )
+    fun inject( fencing:Fencing )
     fun inject( trackingService:TrackingService )
     fun inject( fetchPersons:FetchPersons )
     fun inject( state:State )
+    fun inject( fencingReceiver:FenceReceiver )
 }

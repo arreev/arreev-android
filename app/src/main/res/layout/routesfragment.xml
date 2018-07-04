@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"></import>
+        <variable name="routesfragment" type="com.arreev.android.routes.RoutesFragment"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent" android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent" android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/Heading"
+                    android:text="select which route..."
+                    android:onClick="@{ () -> routesfragment.toggleRoutes() }">
+                </TextView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/routesrecyclerview"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:visibility="@{routesfragment.showroutes ? View.VISIBLE : View.GONE}">
+                </android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    style="@style/Heading"
+                    android:text="active route"
+                    android:onClick="@{ () -> routesfragment.toggleCurrentRoute() }">
+                </TextView>
+
+                <RelativeLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="5dp"
+                    android:background="@drawable/box"
+                    android:clickable="false"
+                    android:layout_width="match_parent" android:layout_height="340dp"
+                    android:visibility="@{routesfragment.showcurrentroute ? View.VISIBLE : View.INVISIBLE}">
+                    <fragment
+                        android:id="@+id/currentroutemapfragment"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent" android:layout_height="340dp">
+                    </fragment>
+                    <FrameLayout
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content">
+                        <CheckBox
+                            android:id="@+id/routeactivatecheckbox"
+                            android:text="Yes, I am going this route."
+                            android:layout_width="wrap_content" android:layout_height="wrap_content">
+                        </CheckBox>
+                    </FrameLayout>
+                </RelativeLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="32dp"></View>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <ImageView
+            android:id="@+id/routesworkingimageview"
+            android:src="@drawable/working"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content" android:layout_height="wrap_content">
+        </ImageView>
+    </FrameLayout>
+
+</layout>

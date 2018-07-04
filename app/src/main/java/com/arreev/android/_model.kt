@@ -27,3 +27,18 @@ data class Person(
         val imageURL: String? = null,
         val isFollowing:android.databinding.ObservableBoolean = android.databinding.ObservableBoolean(false )
 )
+
+data class Route(
+        val id: String,
+        val name: String? = null,
+        val imageURL: String? = null
+)
+
+data class Waypoint(
+        val id: String,
+        val name: String? = null,
+        val latitude: Double? = null,
+        val longitude: Double? = null,
+        var index: Long? = null
+)
+

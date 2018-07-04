@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"></import>
+        <variable name="ridefragment" type="com.arreev.android.rides.RidesFragment"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent" android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent" android:layout_height="match_parent">
+            <LinearLayout
+
+                android:orientation="vertical"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent" android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/Heading"
+                    android:text="select which stable..."
+                    android:onClick="@{ () -> ridefragment.toggleStables() }">
+                </TextView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fleetsrecyclerview"
+                    android:visibility="@{ridefragment.showstables ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent" android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    style="@style/Heading"
+                    android:text="select which ride..."
+                    android:onClick="@{ () -> ridefragment.toggleRides() }">
+                </TextView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/transportersrecyclerview"
+                    android:visibility="@{ridefragment.showrides ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent" android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    style="@style/Heading"
+                    android:text="active ride"
+                    android:onClick="@{ () -> ridefragment.toggleCurrentRide() }">
+                </TextView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/riderecyclerview"
+                    android:visibility="@{ridefragment.showcurrentride ? View.VISIBLE : View.GONE}"
+                    android:minHeight="256dp"
+                    android:layout_width="match_parent" android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+
+                <View
+                    android:layout_width="match_parent" android:layout_height="32dp">
+                </View>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <ImageView
+            android:id="@+id/ridesworkingimageview"
+            android:src="@drawable/working"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content" android:layout_height="wrap_content">
+        </ImageView>
+    </FrameLayout>
+
+</layout>

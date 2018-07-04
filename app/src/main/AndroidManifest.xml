@@ -37,7 +37,31 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <service
+            android:name=".ArreevMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".ArreevFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification">
+        </meta-data>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorHotPink">
+        </meta-data>
+
         <service android:name=".TrackingService"></service>
+
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDkyjwfdQnX9cZV8fkTW29cCeQGwpbpwNA"></meta-data>
+        <meta-data android:name="com.google.android.awareness.API_KEY" android:value="AIzaSyD6-c-CZmwCKnGTXV8B6acJ2j909y_UM0E"></meta-data>
     </application>
 
 </manifest>

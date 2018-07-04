@@ -4,10 +4,15 @@
     <color name="colorPrimaryDark">#475ABD</color>
     <color name="colorAccent">#67AAFD</color>
 
+    <color name="colorWindowBackground">#DDDDEE</color>
+    <color name="colorNavBackground">#F2F2F8</color>
+
     <color name="colorLiteGray">#E0E0E0</color>
     <color name="colorGray">#A0A0A0</color>
     <color name="colorDarkGray">#505050</color>
 
     <color name="colorPlum">#576ACD</color>
     <color name="colorHotPink">#FF00FF</color>
+
+    <color name="colorTransparent">#00000000</color>
 </resources>

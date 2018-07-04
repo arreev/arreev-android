@@ -1,8 +1,6 @@
 
 package com.arreev.android
 
-import javax.inject.*
-
 import io.reactivex.*
 import io.reactivex.subjects.*
 import io.reactivex.schedulers.*
@@ -12,6 +10,8 @@ const val FLEETID           = "FLEETID"
 const val TRANSPORTERID     = "TRANSPORTERID"
 const val TRACKINGID        = "TRACKINGID"
 const val TRACKINGLOCATION  = "TRACKINGLOCATION"
+const val ROUTEID           = "ROUTEID"
+const val FENCING           = "FENCING"
 const val NONE              = "NONE"
 
 data class Client(
@@ -19,6 +19,8 @@ data class Client(
         val transporterid: String? = null,
         val trackingid: String? = null,
         val trackinglocation: android.location.Location? = null,
+        val routeid: String? = null,
+        val fencing: String? = null,
         val modification: String = NONE
 )
 
@@ -27,8 +29,6 @@ data class Client(
  */
 class State
 {
-//    @Inject lateinit var personsPresenter : PersonsPresenter
-//    @Inject lateinit var ridePresenter : RidePresenter
     private var _client = BehaviorSubject.create<Client>()
 
     init {
@@ -40,6 +40,8 @@ class State
     fun getTransporter() = _client.value.transporterid
     fun getTracking() = _client.value.trackingid
     fun getTrackingLocation() = _client.value.trackinglocation
+    fun getRoute() = _client.value.routeid
+    fun getFencing() = _client.value.fencing
 
     fun clearAll() {
         supercede( Client() )
@@ -47,13 +49,14 @@ class State
 
     fun setFleet( fleetid:String? ) {
         val client = _client.value
-        if ( client.fleetid?.equals( fleetid ) ?: false ) { return }
 
         val newclient = Client(
                 fleetid,
                 client.transporterid,
                 client.trackingid,
                 client.trackinglocation,
+                client.routeid,
+                client.fencing,
                 FLEETID
         )
 
@@ -62,13 +65,14 @@ class State
 
     fun setTransporter( transporterid:String? ) {
         val client = _client.value
-        if ( client.transporterid?.equals( transporterid ) ?: false ) { return }
 
         val newclient = Client(
                 client.fleetid,
                 transporterid,
                 client.trackingid,
                 client.trackinglocation,
+                client.routeid,
+                client.fencing,
                 TRANSPORTERID
         )
 
@@ -77,13 +81,14 @@ class State
 
     fun setTracking( trackingid:String? ) {
         val client = _client.value
-        if ( client.trackingid?.equals( trackingid ) ?: false ) { return }
 
         val newclient = Client(
                 client.fleetid,
                 client.transporterid,
                 trackingid,
                 client.trackinglocation,
+                client.routeid,
+                client.fencing,
                 TRACKINGID
         )
 
@@ -92,14 +97,47 @@ class State
 
     fun setTrackingLocation( trackinglocation:android.location.Location? ) {
         val client = _client.value
-        if ( client.trackinglocation?.equals( trackinglocation ) ?: false ) { return }
 
         val newclient = Client(
                 client.fleetid,
                 client.transporterid,
                 client.trackingid,
                 trackinglocation,
+                client.routeid,
+                client.fencing,
                 TRACKINGLOCATION
+        )
+
+        supercede( newclient )
+    }
+
+    fun setRoute( routeid:String? ) {
+        val client = _client.value
+
+        val newclient = Client(
+                client.fleetid,
+                client.transporterid,
+                client.trackingid,
+                client.trackinglocation,
+                routeid,
+                client.fencing,
+                ROUTEID
+        )
+
+        supercede( newclient )
+    }
+
+    fun setFencing( fencing:String? ) {
+        val client = _client.value
+
+        val newclient = Client(
+                client.fleetid,
+                client.transporterid,
+                client.trackingid,
+                client.trackinglocation,
+                client.routeid,
+                fencing,
+                FENCING
         )
 
         supercede( newclient )

@@ -17,8 +17,8 @@ interface Logger
 }
 
 fun log( a:Any? ) { logger.log( a ); }
+fun dbg( x:Throwable? ) { logger.err( x ); }
 fun dbg( a:Any? ) { logger.dbg( a ); }
-fun err( e:Throwable? ) { logger.err( e ); }
 
 class AndroidLogger : Logger
 {

@@ -29,7 +29,7 @@ class Tracking : LocationCallback()
         client = LocationServices.getFusedLocationProviderClient( context )
 
         val request = LocationRequest().apply {
-            interval = 15000
+            interval = 7500
             fastestInterval = 2500
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
@@ -53,7 +53,9 @@ class Tracking : LocationCallback()
     }
 
     override fun onLocationResult( result:LocationResult? ) {
-        state.setTrackingLocation( result?.lastLocation ?: null )
+        result ?: return
+        state.setTrackingLocation( result.lastLocation ?: null )
+        //fencing.update( result.lastLocation )
     }
 
     override fun onLocationAvailability( availability:LocationAvailability? ) {

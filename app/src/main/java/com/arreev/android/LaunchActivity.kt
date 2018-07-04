@@ -18,6 +18,8 @@ class LaunchActivity : AppCompatActivity()
         super.onCreate( savedInstanceState )
         dbg("LaunchActivity.onCreate" )
 
+        sendFCMTokenToServer() // associates this fcm token with currentuser, which could be null if signed-out
+
         val intent = Intent( this,
                 if ( isLoggedIn() ) HomeActivity::class.java else SignInActivity::class.java )
         startActivity( intent )

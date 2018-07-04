@@ -132,6 +132,7 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
         disposable?.dispose()
 
+        display?.busy = true
         FetchPersons().fetch(ownerid ?: "", start,count )
                 .flatMap { (id,name,imageURL) -> Observable.just( Person( id,name,imageURL ) ) }
                 .subscribe(
@@ -151,6 +152,7 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
     private fun onComplete() {
         display?.setItemCount( persons.size )
+        display?.busy = false
         sync()
     }
 
@@ -201,5 +203,6 @@ class PersonsPresenter : Presenter<PersonsDisplay>,DataSource<Person>,PersonsDis
 
     private fun onError() {
         eventbus.send( NetworkErrorEvent() )
+        display?.busy = false
     }
 }
